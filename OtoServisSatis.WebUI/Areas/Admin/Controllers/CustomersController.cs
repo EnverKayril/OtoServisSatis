@@ -7,105 +7,105 @@ using OtoServisSatis.Service.Abstract;
 namespace OtoServisSatis.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CarsController : Controller
+    public class CustomersController : Controller
     {
-        private readonly IService<Arac> _service;
-        private readonly IService<Marka> _serviceMarka;
+        private readonly IService<Musteri> _service;
+        private readonly IService<Arac> _serviceArac;
 
-        public CarsController(IService<Arac> service, IService<Marka> serviceMarka)
+        public CustomersController(IService<Musteri> service, IService<Arac> serviceArac)
         {
             _service = service;
-            _serviceMarka = serviceMarka;
+            _serviceArac = serviceArac;
         }
 
-        // GET: VehicleController
-        public async Task<IActionResult> IndexAsync()
+        // GET: CustomersController
+        public async Task<ActionResult> IndexAsync()
         {
             var model = await _service.GetAllAsync();
             return View(model);
         }
 
-        // GET: VehicleController/Details/5
+        // GET: CustomersController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: VehicleController/Create
+        // GET: CustomersController/Create
         public async Task<ActionResult> CreateAsync()
         {
-            ViewBag.MarkaId = new SelectList(await _serviceMarka.GetAllAsync(), "Id", "Adi");
+            ViewBag.AracId = new SelectList(await _serviceArac.GetAllAsync(), "Id", "Model");
             return View();
         }
 
-        // POST: VehicleController/Create
+        // POST: CustomersController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync(Arac arac)
+        public async Task<ActionResult> CreateAsync(Musteri musteri)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _service.AddAsync(arac);
+                    await _service.AddAsync(musteri);
                     await _service.SaveAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
-                    ModelState.AddModelError("", "Hata Oluştu!");
+                    ModelState.AddModelError("", "Hata Oluştu");
                 }
             }
-            ViewBag.MarkaId = new SelectList(await _serviceMarka.GetAllAsync(), "Id", "Adi");
-            return View(arac);
+            ViewBag.AracId = new SelectList(await _serviceArac.GetAllAsync(), "Id", "Model");
+            return View(musteri);
         }
 
-        // GET: VehicleController/Edit/5
+        // GET: CustomersController/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
-            ViewBag.MarkaId = new SelectList(await _serviceMarka.GetAllAsync(), "Id", "Adi");
+            ViewBag.AracId = new SelectList(await _serviceArac.GetAllAsync(), "Id", "Model");
             var model = await _service.FindAsync(id);
             return View(model);
         }
 
-        // POST: VehicleController/Edit/5
+        // POST: CustomersController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, Arac arac)
+        public async Task<ActionResult> EditAsync(int id, Musteri musteri)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _service.Update(arac);
+                    _service.Update(musteri);
                     await _service.SaveAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
-                    ModelState.AddModelError("", "Hata Oluştu!");
+                    ModelState.AddModelError("", "Hata Oluştu");
                 }
             }
-            ViewBag.MarkaId = new SelectList(await _serviceMarka.GetAllAsync(), "Id", "Adi");
-            return View(arac);
+            ViewBag.AracId = new SelectList(await _serviceArac.GetAllAsync(), "Id", "Model");
+            return View(musteri);
         }
 
-        // GET: VehicleController/Delete/5
+        // GET: CustomersController/Delete/5
         public async Task<ActionResult> DeleteAsync(int id)
         {
             var model = await _service.FindAsync(id);
             return View(model);
         }
 
-        // POST: VehicleController/Delete/5
+        // POST: CustomersController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(int id, Arac arac)
+        public ActionResult Delete(int id, Musteri müsteri)
         {
             try
             {
-                _service.Delete(arac);
-                await _service.SaveAsync();
+                _service.Delete(müsteri);
+                _service.Save();
                 return RedirectToAction(nameof(Index));
             }
             catch

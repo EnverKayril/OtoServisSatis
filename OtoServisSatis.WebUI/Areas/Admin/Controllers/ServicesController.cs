@@ -7,105 +7,99 @@ using OtoServisSatis.Service.Abstract;
 namespace OtoServisSatis.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CarsController : Controller
+    public class ServicesController : Controller
     {
-        private readonly IService<Arac> _service;
-        private readonly IService<Marka> _serviceMarka;
+        private readonly IService<Servis> _service;
 
-        public CarsController(IService<Arac> service, IService<Marka> serviceMarka)
+        public ServicesController(IService<Servis> service)
         {
             _service = service;
-            _serviceMarka = serviceMarka;
         }
 
-        // GET: VehicleController
-        public async Task<IActionResult> IndexAsync()
+        // GET: ServicesController
+        public async Task<ActionResult> IndexAsync()
         {
             var model = await _service.GetAllAsync();
             return View(model);
         }
 
-        // GET: VehicleController/Details/5
+        // GET: ServicesController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: VehicleController/Create
-        public async Task<ActionResult> CreateAsync()
+        // GET: ServicesController/Create
+        public ActionResult Create()
         {
-            ViewBag.MarkaId = new SelectList(await _serviceMarka.GetAllAsync(), "Id", "Adi");
             return View();
         }
 
-        // POST: VehicleController/Create
+        // POST: ServicesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync(Arac arac)
+        public async Task<ActionResult> CreateAsync(Servis servis)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _service.AddAsync(arac);
+                    await _service.AddAsync(servis);
                     await _service.SaveAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
-                    ModelState.AddModelError("", "Hata Oluştu!");
+                    ModelState.AddModelError("", "Hata Oluştu");
                 }
             }
-            ViewBag.MarkaId = new SelectList(await _serviceMarka.GetAllAsync(), "Id", "Adi");
-            return View(arac);
+            return View(servis);
         }
 
-        // GET: VehicleController/Edit/5
+        // GET: ServicesController/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
-            ViewBag.MarkaId = new SelectList(await _serviceMarka.GetAllAsync(), "Id", "Adi");
             var model = await _service.FindAsync(id);
             return View(model);
         }
 
-        // POST: VehicleController/Edit/5
+        // POST: ServicesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, Arac arac)
+        public async Task<ActionResult> EditAsync(int id, Servis servis)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _service.Update(arac);
+                    _service.Update(servis);
                     await _service.SaveAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch
                 {
-                    ModelState.AddModelError("", "Hata Oluştu!");
+                    ModelState.AddModelError("", "Hata Oluştu");
                 }
             }
-            ViewBag.MarkaId = new SelectList(await _serviceMarka.GetAllAsync(), "Id", "Adi");
-            return View(arac);
+            return View();
         }
 
-        // GET: VehicleController/Delete/5
+        // GET: ServicesController/Delete/5
         public async Task<ActionResult> DeleteAsync(int id)
         {
             var model = await _service.FindAsync(id);
             return View(model);
         }
 
-        // POST: VehicleController/Delete/5
+        // POST: ServicesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(int id, Arac arac)
+        public ActionResult Delete(int id, Servis servis)
         {
             try
             {
-                _service.Delete(arac);
-                await _service.SaveAsync();
+                _service.Delete(servis);
+                _service.Save();
                 return RedirectToAction(nameof(Index));
             }
             catch
