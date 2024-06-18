@@ -17,6 +17,7 @@ namespace OtoServisSatis.WebUI
             builder.Services.AddDbContext<DatabaseContext>();
 
             builder.Services.AddTransient(typeof(IService<>), typeof(Service<>));
+            builder.Services.AddTransient<ICarService, CarService>();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
             {
@@ -26,6 +27,12 @@ namespace OtoServisSatis.WebUI
                 x.Cookie.Name = "Admin";
                 x.Cookie.MaxAge = TimeSpan.FromDays(7);
                 x.Cookie.IsEssential = true;
+            });
+
+            builder.Services.AddAuthorization(x =>
+            {
+                x.AddPolicy("AdminPolicy", policy => policy.RequireClaim("Role", "Admin"));
+                x.AddPolicy("UserPolicy", policy => policy.RequireClaim("Role", "User"));
             });
 
             var app = builder.Build();
@@ -60,3 +67,6 @@ namespace OtoServisSatis.WebUI
         }
     }
 }
+//admin@otoservissatis.com 123456
+
+//Slider
