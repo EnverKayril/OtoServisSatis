@@ -17,6 +17,7 @@ namespace OtoServisSatis.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("server=ENVER\\SQLEXPRESS01;database=OtoServisSatisNetCore;integrated security=true;Trust Server Certificate=true");
+            optionsBuilder.UseLazyLoadingProxies();
             base.OnConfiguring(optionsBuilder);
         }
 
